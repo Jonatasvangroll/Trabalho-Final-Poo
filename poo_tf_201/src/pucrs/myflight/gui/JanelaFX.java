@@ -102,12 +102,11 @@ public class JanelaFX extends Application {
 	// Inicializando os dados aqui...
 	private void setup() {
 
-		gerCias = new GerenciadorCias();
-		gerAero = new GerenciadorAeroportos();
-		gerRotas = new GerenciadorRotas();
-		gerAvioes = new GerenciadorAeronaves();
+		gerCias =  GerenciadorCias.getInstance();
+		gerAero =  GerenciadorAeroportos.getInstance();
+		gerRotas = GerenciadorRotas.getInstance();
+		gerAvioes = GerenciadorAeronaves.getInstance();
 	}
-
 	private void consulta1() {
 
 		// Lista para armazenar o resultado da consulta
