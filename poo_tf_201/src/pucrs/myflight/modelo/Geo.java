@@ -9,15 +9,26 @@ public class Geo extends GeoPosition {
 	public Geo(double latitude, double longitude) {
 		super(latitude, longitude);		
 	}
-	
-	// Metodo para calcular a distancia entre
-	// ESTA localizacao e o outra informada
-	public double distancia(Geo outra) {
+
+
+	//velocidade padrão dos aviões.
+	public final double velocidadeAvioes = 805;
+	//tempo de decolagem e aterrissagem
+	double aterriDec = 30;
+	// Metodo que calcula a distancia entre geolocalizações
+	public double distancia(Geo outraLocalizacao) {
 		Geo obj = new Geo(getLatitude(), getLongitude());
-		return distancia(obj, outra);
-		//return distancia(this, outra);
+		return distancia(obj, outraLocalizacao);
+
 	}
-	
+
+	public double tempoViagem(Geo locConexao, Geo locDestino) {
+		double rota1 = this.distancia(locConexao);
+		double rota2 = locConexao.distancia(locDestino);
+		double distancia = rota1 + rota2;
+		return (distancia/velocidadeAvioes + aterriDec);
+	}
+
 	// Metodo de classe (static) para calcular
 	// distancias entre dois objetos Geo informados
 	public static double distancia(Geo geo1, Geo geo2) {

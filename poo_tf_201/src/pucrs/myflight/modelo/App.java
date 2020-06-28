@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.nio.file.NoSuchFileException;
 
 public class App {
 
@@ -12,12 +13,12 @@ public class App {
 
 		GerenciadorCias gerCias = new GerenciadorCias();
 
-        try {
-            gerCias.carregaDados("airlines.dat");
-        } catch (IOException e) {
-            System.out.println("Não foi possível ler airlines.dat!");
-//            System.exit(1);
-        }
+        //try {
+           // gerCias.carregaDados("airlines.dat");
+        //} catch (IOException x) {
+         // System.out.println("Não foi possível ler airlines.dat!");
+          // System.exit(1);
+      // }
         ArrayList<CiaAerea> todasCias = gerCias.listarTodas();
         System.out.println("Total cias:"+todasCias.size());
         for(CiaAerea cia: todasCias)

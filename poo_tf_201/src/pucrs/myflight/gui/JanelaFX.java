@@ -11,12 +11,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.*;
 
 import javax.swing.SwingUtilities;
 
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.GeoPosition;
 
+import javafx.scene.control.TextField;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,6 +41,8 @@ import pucrs.myflight.modelo.GerenciadorAeroportos;
 import pucrs.myflight.modelo.GerenciadorCias;
 import pucrs.myflight.modelo.GerenciadorRotas;
 import pucrs.myflight.modelo.Rota;
+import pucrs.myflight.modelo.*;
+
 
 public class JanelaFX extends Application {
 
@@ -48,11 +54,17 @@ public class JanelaFX extends Application {
 	private GerenciadorAeronaves gerAvioes;
 
 	private GerenciadorMapa gerenciador;
+	private GerenciadorDePaises gerPaises;
 
 	private EventosMouse mouse;
 
 	private ObservableList<CiaAerea> comboCiasData;
 	private ComboBox<CiaAerea> comboCia;
+	private ComboBox<Paises> comboPais;
+	private ComboBox<Aeroporto> comboAero1;
+	private ComboBox<Aeroporto> comboAero2;
+
+	private  TextField duracao;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -87,7 +99,8 @@ public class JanelaFX extends Application {
 
 		btnConsulta1.setOnAction(e -> {
 			consulta1();
-		});			
+		});
+
 
 		pane.setCenter(mapkit);
 		pane.setTop(leftPane);
@@ -106,6 +119,7 @@ public class JanelaFX extends Application {
 		gerAero = new GerenciadorAeroportos();
 		gerRotas = new GerenciadorRotas();
 		gerAvioes = new GerenciadorAeronaves();
+		gerPaises = new GerenciadorDePaises();
 	}
 
 	private void consulta1() {
