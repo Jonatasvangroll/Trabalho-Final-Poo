@@ -1,38 +1,46 @@
 package pucrs.myflight.modelo;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class GerenciadorCias {
-    private Map<String, CiaAerea> empresas;
 
-    public GerenciadorCias() {
-//        this.empresas = new HashMap<>();
-//        this.empresas = new TreeMap<>();
-        this.empresas = new LinkedHashMap<>();
+    private Map<String,CiaAerea> empresas;
+    Map<String,Set<String>> arquivo;
+
+    private static GerenciadorCias instance;
+
+    public static GerenciadorCias getInstance() {
+        if ( instance == null )
+            instance = new GerenciadorCias();
+
+        return instance;
+    }
+
+    private GerenciadorCias() {
+        this.empresas = new HashMap<>();
     }
 
     public ArrayList<CiaAerea> listarTodas() {
         return new ArrayList<>(empresas.values());
     }
 
-    public void carregaDados(String nomeArq) throws IOException {
-        Path path = Paths.get(nomeArq);
-        try (Scanner sc = new Scanner(Files.newBufferedReader(path, Charset.forName("utf8")))) {
-            sc.useDelimiter("[;\n]"); // separadores: ; e nova linha
-            String header = sc.nextLine(); // pula cabeçalho
-            String cod, nome;
-            while (sc.hasNext()) {
-                cod = sc.next();
-                nome = sc.next();
-                CiaAerea nova = new CiaAerea(cod, nome);
+    public void carregaDados(String nomeArq){
+        File file = new File(nomeArq);
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+
+            String arquivo;
+            while ((arquivo = br.readLine()) != null) {
+              //  System.out.println(arquivo);
+                String[] dados = arquivo.split(";");
+                CiaAerea nova = new CiaAerea(dados[0], dados[1]);
                 adicionar(nova);
-                //System.out.format("%s - %s (%s)%n", nome, data, cpf);
             }
+        } catch (IOException e) {
+            System.err.format("Erro de E/S: %s%n ", e);
         }
     }
 
@@ -43,16 +51,14 @@ public class GerenciadorCias {
 
     public CiaAerea buscarCodigo(String cod) {
         return empresas.get(cod);
-//        for (CiaAerea cia : empresas)
-//            if (cia.getCodigo().equals(cod))
-//                return cia;
-//        return null;
     }
 
     public CiaAerea buscarNome(String nome) {
         for(CiaAerea cia: empresas.values())
-           if(cia.getNome().equals(nome))
-               return cia;
+            if(cia.getNome().equals(nome))
+                return cia;
         return null;
     }
+
 }
+
