@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="poo_tf_201">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/poo_tf_201/commons-logging-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/poo_tf_201/jxmapviewer.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
