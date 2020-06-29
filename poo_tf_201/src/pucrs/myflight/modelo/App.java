@@ -1,15 +1,15 @@
 package pucrs.myflight.modelo;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.nio.file.NoSuchFileException;
 
 public class App {
 
-	public static void main(String[] args) {
+    private static String codPais;
+
+    public static void main(String[] args) {
 
 		GerenciadorCias gerCias = new GerenciadorCias();
 
@@ -48,13 +48,13 @@ public class App {
         GerenciadorAeroportos gerAero = new GerenciadorAeroportos();
 
 		gerAero.adicionar(new Aeroporto("POA", "Salgado Filho Intl",
-                new Geo(-29.9939, -51.1711)));
+                new Geo(-29.9939, -51.1711), codPais));
 		gerAero.adicionar(new Aeroporto("GRU", "São Paulo Guarulhos Intl",
-                new Geo(-23.4356, -46.4731)));
+                new Geo(-23.4356, -46.4731), codPais));
 		gerAero.adicionar(new Aeroporto("LIS", "Lisbon",
-                new Geo(38.7742, -9.1342)));
+                new Geo(38.7742, -9.1342), codPais));
 		gerAero.adicionar(new Aeroporto("MIA", "Miami Intl Airport",
-                new Geo(25.7933, -80.2906)));
+                new Geo(25.7933, -80.2906), codPais));
 		gerAero.ordenarNomes();
 
         System.out.println("\nAeroportos ordenados por nome:\n");

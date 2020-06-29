@@ -3,15 +3,8 @@ package pucrs.myflight.gui;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.*;
 
 import javax.swing.SwingUtilities;
 
@@ -19,10 +12,7 @@ import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.GeoPosition;
 
 import javafx.scene.control.TextField;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingNode;
 import javafx.geometry.Insets;
@@ -40,7 +30,6 @@ import pucrs.myflight.modelo.GerenciadorAeronaves;
 import pucrs.myflight.modelo.GerenciadorAeroportos;
 import pucrs.myflight.modelo.GerenciadorCias;
 import pucrs.myflight.modelo.GerenciadorRotas;
-import pucrs.myflight.modelo.Rota;
 import pucrs.myflight.modelo.*;
 
 
@@ -65,6 +54,7 @@ public class JanelaFX extends Application {
 	private ComboBox<Aeroporto> comboAero2;
 
 	private  TextField duracao;
+	private String codPais;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -127,10 +117,10 @@ public class JanelaFX extends Application {
 		// Lista para armazenar o resultado da consulta
 		List<MyWaypoint> lstPoints = new ArrayList<>();
 
-		Aeroporto poa = new Aeroporto("POA", "Salgado Filho", new Geo(-29.9939, -51.1711));
-		Aeroporto gru = new Aeroporto("GRU", "Guarulhos", new Geo(-23.4356, -46.4731));
-		Aeroporto lis = new Aeroporto("LIS", "Lisbon", new Geo(38.772,-9.1342));
-		Aeroporto mia = new Aeroporto("MIA", "Miami International", new Geo(25.7933, -80.2906));
+		Aeroporto poa = new Aeroporto("POA", "Salgado Filho", new Geo(-29.9939, -51.1711), codPais);
+		Aeroporto gru = new Aeroporto("GRU", "Guarulhos", new Geo(-23.4356, -46.4731), codPais);
+		Aeroporto lis = new Aeroporto("LIS", "Lisbon", new Geo(38.772,-9.1342), codPais);
+		Aeroporto mia = new Aeroporto("MIA", "Miami International", new Geo(25.7933, -80.2906), codPais);
 		
 		gerenciador.clear();
 		Tracado tr = new Tracado();

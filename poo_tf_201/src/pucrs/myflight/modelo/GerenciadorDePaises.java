@@ -22,8 +22,8 @@ public class GerenciadorDePaises {
 
     public void carregaDados(String nomeArq){
 
-        Path path2 = Paths.get(nomeArq);
-        try (BufferedReader br = Files.newBufferedReader(path2, Charset.defaultCharset()))
+        Path path = Paths.get(nomeArq);
+        try (BufferedReader br = Files.newBufferedReader(path, Charset.defaultCharset()))
         {
             String header = br.readLine();
             String linha = null;
