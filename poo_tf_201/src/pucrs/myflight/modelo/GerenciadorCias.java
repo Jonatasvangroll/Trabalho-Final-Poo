@@ -27,7 +27,7 @@ public class GerenciadorCias {
             String header = br.readLine();
             String linha = null;
             while((linha = br.readLine()) != null) {
-                Scanner sc = new Scanner(linha).useDelimiter("-");
+                Scanner sc = new Scanner(linha).useDelimiter(";"); // separador é ;
                 String codigo, nome;
                 codigo = sc.next();
                 nome = sc.next();
@@ -37,7 +37,7 @@ public class GerenciadorCias {
             }
         }
         catch (IOException x) {
-            System.err.format("Erro na leitura do arquivo.");
+            System.err.format("Erro na manipulação do arquivo.");
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -51,7 +51,6 @@ public class GerenciadorCias {
 
     public CiaAerea buscarCodigo(String cod) {
         return empresas.get(cod);
-
     }
 
     public CiaAerea buscarNome(String nome) {
