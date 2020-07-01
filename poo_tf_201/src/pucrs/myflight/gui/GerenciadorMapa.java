@@ -219,6 +219,9 @@ public class GerenciadorMapa {
 		this.useGeodesic = true;
 	}
 
+	public void alterarCentro(GeoPosition geo) {
+		jXMapKit.setAddressLocation(geo);
+	}
 	/*
 	 * Retorna a localização de um ponto
 	 * 
