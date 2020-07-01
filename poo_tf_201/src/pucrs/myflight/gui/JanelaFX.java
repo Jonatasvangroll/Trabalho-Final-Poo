@@ -3,14 +3,21 @@ package pucrs.myflight.gui;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.*;
+import java.util.Map.Entry;
 
 
 import javax.swing.SwingUtilities;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.GeoPosition;
 
@@ -27,6 +34,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import pucrs.myflight.modelo.*;
+import pucrs.myflight.modelo.models.Conexao;
+import pucrs.myflight.modelo.models.TrafegoAeroporto;
 
 public class JanelaFX extends Application {
 
@@ -37,14 +46,14 @@ public class JanelaFX extends Application {
 	private GerenciadorRotas gerRotas;
 	private GerenciadorAeronaves gerAvioes;
 
-	private GerenciadorDePaises gerPaises;
+	private GerenciadorPaises gerPaises;
 	private GerenciadorMapa gerenciador;
 
 	private EventosMouse mouse;
 
 	private ObservableList<CiaAerea> comboCiasData;
 	private ComboBox<CiaAerea> comboCia;
-	private ComboBox<Paises> comboPais;
+	private ComboBox<Pais> comboPais;
 	private ComboBox<Aeroporto> comboAero;
 	private ComboBox<Aeroporto> comboAero2;
 
@@ -71,10 +80,10 @@ public class JanelaFX extends Application {
 		leftPane.setVgap(10);
 		leftPane.setPadding(new Insets(10, 10, 10, 10));
 
-		Button btnConsulta1 = new Button("Aeroportos da Cia selecionada");
-		Button btnConsulta2 = new Button("Volume de Trafego por aeroporto ou país");
+		Button btnConsulta1 = new Button("Aeroportos de uma Cia");
+		Button btnConsulta2 = new Button("Volume de Trafego");
 		Button btnConsulta3 = new Button("Rotas entre Aeroportos");
-		Button btnConsulta4 = new Button("Aeroportos Próximos do seu destino");
+		Button btnConsulta4 = new Button("Aeroportos Próximos");
 
 		leftPane.add(btnConsulta1, 0, 0);
 		leftPane.add(btnConsulta2, 2, 0);
@@ -106,14 +115,14 @@ public class JanelaFX extends Application {
 
 	}
 
-	// Inicializando os dados
+	// Inicializando os dados aqui...
 	private void setup() {
 
 		gerCias = new GerenciadorCias();
 		gerAero = new GerenciadorAeroportos();
 		gerRotas = new GerenciadorRotas();
 		gerAvioes = new GerenciadorAeronaves();
-		gerPaises = new GerenciadorDePaises();
+		gerPaises = new GerenciadorPaises();
 	}
 
 	private void  aeroportosDeUmaCia(GridPane leftPane) {
@@ -121,13 +130,13 @@ public class JanelaFX extends Application {
 		gerenciador.clear();
 
 		comboCia = new ComboBox(FXCollections.observableList(gerCias.listarTodas()));
-		comboCia.setPromptText("Selecione a Cia Aerea");
+		comboCia.setPromptText("Selecione a Cia...");
 		leftPane.add(comboCia, 0, 1);
-		comboCia.setMaxSize(300,300);
-		Button consultar = new Button("Consultar Cia Aerea");
+		comboCia.setMaxSize(200,200);
+		Button consultar = new Button("Consultar");
 		leftPane.add(consultar, 0,2);
 		consultar.setOnAction(e -> {
-			ArrayList<Aeroporto> aeroportos = gerAero.listaAeroportosPorCodCia(comboCia.getValue().getCodigo(), gerRotas);
+			ArrayList<Aeroporto> aeroportos = gerAero.listarAeroportosPorCodCompanhia(comboCia.getValue().getCodigo(), gerRotas);
 
 			for (Aeroporto a: aeroportos) {
 				lstPoints.add(new MyWaypoint(Color.RED, a.getCodigo(), a.getLocal(), 10));
@@ -155,12 +164,12 @@ public class JanelaFX extends Application {
 		List<MyWaypoint> lstPoints = new ArrayList<>();
 		gerenciador.clear();
 
-		Button buscarNoMundo = new Button("No mundo");
-		Button buscarEmUmPais = new Button("Em um país");
-		leftPane.add(buscarNoMundo, 2, 1);
-		leftPane.add(buscarEmUmPais, 2, 2);
+		Button buscaVolumeNoMundo = new Button("No mundo");
+		Button buscaVolumeEmUmPais = new Button("Em um país");
+		leftPane.add(buscaVolumeNoMundo, 2, 1);
+		leftPane.add(buscaVolumeEmUmPais, 2, 2);
 
-		buscarNoMundo.setOnAction(e -> {
+		buscaVolumeNoMundo.setOnAction(e -> {
 			ArrayList<TrafegoAeroporto> ta = gerAero.estimativaTrafegoPorAeroporto(gerRotas);
 			for (TrafegoAeroporto trafego: ta) {
 				lstPoints.add(new MyWaypoint(Color.GREEN, trafego.getAeroporto().getCodigo(), trafego.getAeroporto().getLocal(), trafego.getNumeroDeRotas()/4));
@@ -169,9 +178,9 @@ public class JanelaFX extends Application {
 			gerenciador.getMapKit().repaint();
 		});
 
-		buscarEmUmPais.setOnAction(e -> {
-			comboPais = new ComboBox(FXCollections.observableList(gerPaises.listarTodosPaises()));
-			comboPais.setPromptText("Selecione o país");
+		buscaVolumeEmUmPais.setOnAction(e -> {
+			comboPais = new ComboBox(FXCollections.observableList(gerPaises.listarTodas()));
+			comboPais.setPromptText("Selecione o país...");
 			comboPais.setMaxSize(200, 200);
 			leftPane.add(comboPais, 2,3);
 			Button consultar = new Button("Consultar");
@@ -193,10 +202,10 @@ public class JanelaFX extends Application {
 		gerenciador.clear();
 
 		comboAero = new ComboBox(FXCollections.observableList(gerAero.listarTodos()));
-		comboAero.setPromptText("Aeroporto da sua origem");
+		comboAero.setPromptText("Aeroporto de origem...");
 		comboAero.setMaxSize(200, 200);
 		comboAero2 = new ComboBox(FXCollections.observableList(gerAero.listarTodos()));
-		comboAero2.setPromptText("Aeroporto do seu destino");
+		comboAero2.setPromptText("Aeroporto de destino...");
 		comboAero2.setMaxSize(200, 200);
 		leftPane.add(comboAero, 3, 1);
 		leftPane.add(comboAero2, 3, 2);
@@ -208,7 +217,7 @@ public class JanelaFX extends Application {
 			Aeroporto origem = comboAero.getValue();
 			Aeroporto destino = comboAero2.getValue();
 
-			ArrayList<Conexao> conexoes = gerAero.listaTrajetosComUmaConexao(origem, destino, gerRotas);
+			ArrayList<Conexao> conexoes = gerAero.listarTrajetosComUmaConexao(origem, destino, gerRotas);
 
 			for (Conexao conexao: conexoes) {
 
@@ -240,14 +249,14 @@ public class JanelaFX extends Application {
 		gerenciador.clear();
 
 		comboAero = new ComboBox(FXCollections.observableList(gerAero.listarTodos()));
-		comboAero.setPromptText("Selecione o aeroporto");
+		comboAero.setPromptText("Selecione o aeroporto...");
 		comboAero.setMaxSize(200,200);
 		leftPane.add(comboAero, 4, 1);
 		leftPane.add(tempo = new TextField(), 4, 2);
 		Button consultar = new Button("Consultar");
 		leftPane.add(consultar, 4, 3);
 
-		tempo.setPromptText("Tempo em horas");
+		tempo.setPromptText("Numero de horas...");
 		tempo.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -262,9 +271,10 @@ public class JanelaFX extends Application {
 
 			double numeroHoras = Double.parseDouble(tempo.getText());
 
-			ArrayList<Aeroporto> aeroportosComVooDireto = gerAero.listarAeroportosAlcancaveisVooDireto(comboAero.getValue(), numeroHoras, gerRotas);
+			ArrayList<Aeroporto> aeroportosPossiveisComVooDireto = gerAero.listarAeroportosAlcancaveisAteUmTempoVooDireto(comboAero.getValue(), numeroHoras, gerRotas);
 
-			for(Aeroporto destino: aeroportosComVooDireto) {
+			//Fazer traçado com cores distintas para vôos diretos e segundo vôo.
+			for(Aeroporto destino: aeroportosPossiveisComVooDireto) {
 				Tracado tr = new Tracado();
 				tr.setWidth(3);
 				tr.setCor(Color.GREEN);
@@ -274,7 +284,7 @@ public class JanelaFX extends Application {
 				lstPoints.add(new MyWaypoint(Color.blue, destino.getCodigo(), destino.getLocal(), 5));
 			}
 
-			for(Conexao c: gerAero.listaAeroportosAlcancaveis(comboAero.getValue(), numeroHoras, gerRotas)) {
+			for(Conexao c: gerAero.listarAeroportosAlcancaveisAteUmTempo(comboAero.getValue(), numeroHoras, gerRotas)) {
 				lstPoints.add(new MyWaypoint(Color.blue, c.getDestino().getCodigo(), c.getDestino().getLocal(), 5));
 				Tracado tr = new Tracado();
 				tr.setWidth(2);
