@@ -10,15 +10,15 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
 
-public class GerenciadorPaises {
-    private ArrayList<Pais> paises;
+public class GerenciadorDePaises {
+    private ArrayList<Paises> paises;
 
-    public GerenciadorPaises() {
+    public GerenciadorDePaises() {
         this.paises = new ArrayList<>();
         carregaDados("countries.dat");
     }
 
-    public void adicionar(Pais pais) { this.paises.add(pais); }
+    public void adicionar(Paises pais) { this.paises.add(pais); }
 
     public void carregaDados(String nomeArq){
 
@@ -34,7 +34,7 @@ public class GerenciadorPaises {
                 codigo = sc.next();
                 nome = sc.next();
 
-                Pais pais = new Pais(codigo, nome);
+                Paises pais = new Paises(codigo, nome);
                 this.paises.add(pais);
             }
         }
@@ -46,18 +46,18 @@ public class GerenciadorPaises {
         }
     }
 
-    public ArrayList<Pais> listarTodas() { return new ArrayList<>(paises); }
+    public ArrayList<Paises> listarTodosPaises() { return new ArrayList<>(paises); }
 
-    public Pais buscarPorCodigo(String codigo) {
-        for (Pais p : paises)
+    public Paises buscarPorCodigo(String codigo) {
+        for (Paises p : paises)
             if (p.getCodigo().equals(codigo))
                 return p;
         return null;
     }
 
-    public void ordenaCodigo() { paises.sort(Comparator.comparing(Pais::getCodigo));}
+    public void ordenaCodigo() { paises.sort(Comparator.comparing(Paises::getCodigo));}
 
-    public void ordenaNome() { paises.sort(Comparator.comparing(Pais::getNome)); }
+    public void ordenaNome() { paises.sort(Comparator.comparing(Paises::getNome)); }
 
 
 }
