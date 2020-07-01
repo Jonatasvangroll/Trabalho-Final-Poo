@@ -26,9 +26,7 @@ public class VooEscalas extends Voo {
         return rotas.size();
     }
 
-    public ArrayList<Rota> getRotas() {
-        return new ArrayList<>(rotas);
-    }
+    public ArrayList<Rota> getRotas() {return new ArrayList<>(rotas);}
 
 //    public Rota getRotaFinal() {
 //        return rotaFinal;
