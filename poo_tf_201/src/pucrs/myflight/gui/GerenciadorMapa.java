@@ -115,16 +115,11 @@ public class GerenciadorMapa {
 
 				double zoomfat = viewer.getTileFactory().getInfo().getLongitudeDegreeWidthInPixels((int) zoom);
 				double fat = (zoomfat - wxmin) / deltaldp * 2;
-				// System.out.println("Fat: "+fat+" zoom: "+zoom);
-				// s = (1+s)+100*fat;
 				s = 1 + s * 1000 * fat;
-				// System.out.println("zoom:"+zoom+" - "+s);
 				int offset = (int) s;
 				g.fill(new Ellipse2D.Double(x - s, y - s, s + s, s + s));
 				g.setFont(font);
 				if (jXMapKit.getZoomSlider().getValue() < maxZoomText) {
-					// if(wp.getLabel().equals("POA"))
-					// System.out.println("POA: "+x+" "+y);
 					g.setColor(Color.BLACK);
 					g.drawString(wp.getLabel(), x + offset + 1, y + offset + 1);
 					g.setColor(wp.getColor());
@@ -134,7 +129,6 @@ public class GerenciadorMapa {
 			}
 		});
 
-		// Criando um objeto para desenhar o traçado das linhas
 		Painter<JXMapViewer> linhasPainter = new Painter<JXMapViewer>() {
 
 			@Override
@@ -152,15 +146,14 @@ public class GerenciadorMapa {
 					int xmid = (int)(p0.getX() + p1.getX()) / 2;
 					int ymid = (int)(p0.getY() + p1.getY()) / 2;
 					g.setColor(Color.RED);
-
-			
+									
+					
 					for (int i = 0; i < pontos.size(); i++) {
 						Point2D point = map.convertGeoPositionToPoint(pontos.get(i));
 						x[i] = (int) point.getX();
 						y[i] = (int) point.getY();
 					}
-					
-					
+			
 					g.setColor(cor);
 					g.setStroke(new BasicStroke(tr.getWidth()));
 					g.drawPolyline(x, y, x.length);
@@ -169,7 +162,7 @@ public class GerenciadorMapa {
 
 		};
 
-		
+		// Criando um objeto para desenhar os elementos de interface
 		Painter<JXMapViewer> guiPainter = new Painter<JXMapViewer>() {
 			public void paint(Graphics2D g, JXMapViewer map, int w, int h) {
 				if (selCentro == null)
@@ -219,9 +212,6 @@ public class GerenciadorMapa {
 		this.useGeodesic = true;
 	}
 
-	public void alterarCentro(GeoPosition geo) {
-		jXMapKit.setAddressLocation(geo);
-	}
 	/*
 	 * Retorna a localização de um ponto
 	 * 
@@ -229,6 +219,10 @@ public class GerenciadorMapa {
 	 */
 	public GeoPosition getPosicao() {
 		return selCentro;
+	}
+
+	public void alterarCentro(GeoPosition geo) {
+		jXMapKit.setAddressLocation(geo);
 	}
 
 	/*
@@ -278,7 +272,7 @@ public class GerenciadorMapa {
 				GeodesicData g = line.ArcPosition(i * da, GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE);
 				if(Math.abs(g.lon1-g.lon2)>180) continue;
 				novo.addPonto(new Geo(g.lat2, g.lon2));
-				//System.out.println(i + " " + g.lat2 + " " + g.lon2);
+			
 			}
 		}		
 		linhas.add(novo);
