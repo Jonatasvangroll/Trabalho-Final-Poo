@@ -25,11 +25,11 @@ public class App {
         //leitura do arquivo "airports.dat"
         GerenciadorAeroportos gerenciadorAeroportos = new GerenciadorAeroportos();
         System.out.println(gerenciadorAeroportos.listarTodos().size());
-        gerenciadorAeroportos.listarAeroportosPorCodCompanhia("2B", gerenciadorRotas);
+        gerenciadorAeroportos.listaAeroportosPorCodCia("2B", gerenciadorRotas);
 
         //leitura do arquivo "countries.dat"
-        GerenciadorPaises gerenciadorPaises = new GerenciadorPaises();
-        System.out.println(gerenciadorPaises.listarTodas().size());
+        GerenciadorDePaises gerenciadorPaises = new GerenciadorDePaises();
+        System.out.println(gerenciadorPaises.listarTodosPaises().size());
 
         ArrayList<TrafegoAeroporto> ta = gerenciadorAeroportos.estimativaTrafegoPorAeroporto(gerenciadorRotas, "BR");
         System.out.println(ta.size());
