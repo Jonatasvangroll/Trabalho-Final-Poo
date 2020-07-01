@@ -21,21 +21,13 @@ public class Aeroporto implements Comparable<Aeroporto> {
 		this.codPais = codPais;
 	}
 	
-	public String getCodigo() {
-		return codigo;
-	}
+	public String getCodigo() {return codigo;}
 	
-	public String getNome() {
-		return nome;
-	}
+	public String getNome() {return nome;}
 	
-	public Geo getLocal() {
-		return loc;
-	}
+	public Geo getLocal() {return loc;}
 
-	public String getCodPais() {
-		return this.codPais;
-	}
+	public String getCodPais() {return this.codPais;}
 
     @Override
     public String toString() {
