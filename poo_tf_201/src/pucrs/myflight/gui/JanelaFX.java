@@ -3,17 +3,14 @@ package pucrs.myflight.gui;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.*;
+
 
 import javax.swing.SwingUtilities;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.TextField;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.GeoPosition;
 
@@ -29,14 +26,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import pucrs.myflight.modelo.Aeroporto;
-import pucrs.myflight.modelo.CiaAerea;
-import pucrs.myflight.modelo.Geo;
-import pucrs.myflight.modelo.GerenciadorAeronaves;
-import pucrs.myflight.modelo.GerenciadorAeroportos;
-import pucrs.myflight.modelo.GerenciadorCias;
-import pucrs.myflight.modelo.GerenciadorRotas;
-import pucrs.myflight.modelo.Rota;
+import pucrs.myflight.modelo.*;
 
 public class JanelaFX extends Application {
 
@@ -47,12 +37,18 @@ public class JanelaFX extends Application {
 	private GerenciadorRotas gerRotas;
 	private GerenciadorAeronaves gerAvioes;
 
+	private GerenciadorDePaises gerPaises;
 	private GerenciadorMapa gerenciador;
 
 	private EventosMouse mouse;
 
 	private ObservableList<CiaAerea> comboCiasData;
 	private ComboBox<CiaAerea> comboCia;
+	private ComboBox<Paises> comboPais;
+	private ComboBox<Aeroporto> comboAero;
+	private ComboBox<Aeroporto> comboAero2;
+
+	private  TextField tempo;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -75,10 +71,10 @@ public class JanelaFX extends Application {
 		leftPane.setVgap(10);
 		leftPane.setPadding(new Insets(10, 10, 10, 10));
 
-		Button btnConsulta1 = new Button("Consulta 1");
-		Button btnConsulta2 = new Button("Consulta 2");
-		Button btnConsulta3 = new Button("Consulta 3");
-		Button btnConsulta4 = new Button("Consulta 4");
+		Button btnConsulta1 = new Button("Aeroportos da Cia selecionada");
+		Button btnConsulta2 = new Button("Volume de Trafego por aeroporto ou país");
+		Button btnConsulta3 = new Button("Rotas entre Aeroportos");
+		Button btnConsulta4 = new Button("Aeroportos Próximos do seu destino");
 
 		leftPane.add(btnConsulta1, 0, 0);
 		leftPane.add(btnConsulta2, 2, 0);
@@ -86,9 +82,20 @@ public class JanelaFX extends Application {
 		leftPane.add(btnConsulta4, 4, 0);
 
 		btnConsulta1.setOnAction(e -> {
-			consulta1();
-		});			
+			aeroportosDeUmaCia(leftPane);
+		});
 
+		btnConsulta2.setOnAction(e -> {
+			volumeDeTrafego(leftPane);
+		});
+
+		btnConsulta3.setOnAction(e -> {
+			rotasEntreAeroportos(leftPane);
+		});
+
+		btnConsulta4.setOnAction(e -> {
+			mostrarTodosOsAeroportosAlcançáveisAtéUmTempo(leftPane);
+		});
 		pane.setCenter(mapkit);
 		pane.setTop(leftPane);
 
@@ -99,59 +106,190 @@ public class JanelaFX extends Application {
 
 	}
 
-	// Inicializando os dados aqui...
+	// Inicializando os dados
 	private void setup() {
 
-		gerCias =  GerenciadorCias.getInstance();
-		gerAero =  GerenciadorAeroportos.getInstance();
-		gerRotas = GerenciadorRotas.getInstance();
-		gerAvioes = GerenciadorAeronaves.getInstance();
+		gerCias = new GerenciadorCias();
+		gerAero = new GerenciadorAeroportos();
+		gerRotas = new GerenciadorRotas();
+		gerAvioes = new GerenciadorAeronaves();
+		gerPaises = new GerenciadorDePaises();
 	}
-	private void consulta1() {
 
-		// Lista para armazenar o resultado da consulta
+	private void  aeroportosDeUmaCia(GridPane leftPane) {
 		List<MyWaypoint> lstPoints = new ArrayList<>();
-
-		Aeroporto poa = new Aeroporto("POA", "Salgado Filho", new Geo(-29.9939, -51.1711));
-		Aeroporto gru = new Aeroporto("GRU", "Guarulhos", new Geo(-23.4356, -46.4731));
-		Aeroporto lis = new Aeroporto("LIS", "Lisbon", new Geo(38.772,-9.1342));
-		Aeroporto mia = new Aeroporto("MIA", "Miami International", new Geo(25.7933, -80.2906));
-		
 		gerenciador.clear();
-		Tracado tr = new Tracado();
-		tr.setLabel("Teste");
-		tr.setWidth(5);
-		tr.setCor(new Color(0,0,0,60));
-		tr.addPonto(poa.getLocal());
-		tr.addPonto(mia.getLocal());
 
-		gerenciador.addTracado(tr);
-		
-		Tracado tr2 = new Tracado();
-		tr2.setWidth(5);
-		tr2.setCor(Color.BLUE);
-		tr2.addPonto(gru.getLocal());
-		tr2.addPonto(lis.getLocal());
-		gerenciador.addTracado(tr2);
-		
-		// Adiciona os locais de cada aeroporto (sem repetir) na lista de
-		// waypoints
-		
-		lstPoints.add(new MyWaypoint(Color.RED, poa.getCodigo(), poa.getLocal(), 5));
-		lstPoints.add(new MyWaypoint(Color.RED, gru.getCodigo(), gru.getLocal(), 5));
-		lstPoints.add(new MyWaypoint(Color.RED, lis.getCodigo(), lis.getLocal(), 5));
-		lstPoints.add(new MyWaypoint(Color.RED, mia.getCodigo(), mia.getLocal(), 5));
+		comboCia = new ComboBox(FXCollections.observableList(gerCias.listarTodas()));
+		comboCia.setPromptText("Selecione a Cia Aerea");
+		leftPane.add(comboCia, 0, 1);
+		comboCia.setMaxSize(300,300);
+		Button consultar = new Button("Consultar Cia Aerea");
+		leftPane.add(consultar, 0,2);
+		consultar.setOnAction(e -> {
+			ArrayList<Aeroporto> aeroportos = gerAero.listaAeroportosPorCodCia(comboCia.getValue().getCodigo(), gerRotas);
 
-		// Para obter um ponto clicado no mapa, usar como segue:
-		// GeoPosition pos = gerenciador.getPosicao();
+			for (Aeroporto a: aeroportos) {
+				lstPoints.add(new MyWaypoint(Color.RED, a.getCodigo(), a.getLocal(), 10));
+			}
 
-		// Informa o resultado para o gerenciador
-		gerenciador.setPontos(lstPoints);
+			ArrayList<Rota> rotas = gerRotas.listarRotasPorCodCompanhia(comboCia.getValue().getCodigo());
 
-		// Quando for o caso de limpar os traçados...
-		// gerenciador.clear();
+			for(Rota rota : rotas) {
+				Tracado tr = new Tracado();
+				tr.setWidth(2);
+				tr.setCor(Color.ORANGE);
+				tr.addPonto(rota.getOrigem().getLocal());
+				tr.addPonto(rota.getDestino().getLocal());
+				gerenciador.addTracado(tr);
+			}
 
-		gerenciador.getMapKit().repaint();
+			gerenciador.alterarCentro(aeroportos.get(0).getLocal());
+			gerenciador.setPontos(lstPoints);
+			gerenciador.getMapKit().repaint();
+		});
+
+	}
+
+	private void volumeDeTrafego(GridPane leftPane) {
+		List<MyWaypoint> lstPoints = new ArrayList<>();
+		gerenciador.clear();
+
+		Button buscarNoMundo = new Button("No mundo");
+		Button buscarEmUmPais = new Button("Em um país");
+		leftPane.add(buscarNoMundo, 2, 1);
+		leftPane.add(buscarEmUmPais, 2, 2);
+
+		buscarNoMundo.setOnAction(e -> {
+			ArrayList<TrafegoAeroporto> ta = gerAero.estimativaTrafegoPorAeroporto(gerRotas);
+			for (TrafegoAeroporto trafego: ta) {
+				lstPoints.add(new MyWaypoint(Color.GREEN, trafego.getAeroporto().getCodigo(), trafego.getAeroporto().getLocal(), trafego.getNumeroDeRotas()/4));
+			}
+			gerenciador.setPontos(lstPoints);
+			gerenciador.getMapKit().repaint();
+		});
+
+		buscarEmUmPais.setOnAction(e -> {
+			comboPais = new ComboBox(FXCollections.observableList(gerPaises.listarTodosPaises()));
+			comboPais.setPromptText("Selecione o país");
+			comboPais.setMaxSize(200, 200);
+			leftPane.add(comboPais, 2,3);
+			Button consultar = new Button("Consultar");
+			leftPane.add(consultar, 2,4);
+			consultar.setOnAction(x -> {
+				ArrayList<TrafegoAeroporto> ta = gerAero.estimativaTrafegoPorAeroporto(gerRotas, comboPais.getValue().getCodigo());
+				for (TrafegoAeroporto trafego: ta) {
+					lstPoints.add(new MyWaypoint(Color.YELLOW, trafego.getAeroporto().getCodigo(), trafego.getAeroporto().getLocal(), trafego.getNumeroDeRotas()));
+				}
+				gerenciador.setPontos(lstPoints);
+				gerenciador.getMapKit().repaint();
+			});
+
+		});
+	}
+
+	private void rotasEntreAeroportos(GridPane leftPane) {
+		List<MyWaypoint> lstPoints = new ArrayList<>();
+		gerenciador.clear();
+
+		comboAero = new ComboBox(FXCollections.observableList(gerAero.listarTodos()));
+		comboAero.setPromptText("Aeroporto da sua origem");
+		comboAero.setMaxSize(200, 200);
+		comboAero2 = new ComboBox(FXCollections.observableList(gerAero.listarTodos()));
+		comboAero2.setPromptText("Aeroporto do seu destino");
+		comboAero2.setMaxSize(200, 200);
+		leftPane.add(comboAero, 3, 1);
+		leftPane.add(comboAero2, 3, 2);
+		Button consultar = new Button("Consultar");
+		leftPane.add(consultar, 3, 3);
+
+		consultar.setOnAction(e -> {
+
+			Aeroporto origem = comboAero.getValue();
+			Aeroporto destino = comboAero2.getValue();
+
+			ArrayList<Conexao> conexoes = gerAero.listaTrajetosComUmaConexao(origem, destino, gerRotas);
+
+			for (Conexao conexao: conexoes) {
+
+				MyWaypoint pontoOrigem = new MyWaypoint(Color.ORANGE, conexao.getOrigem().getCodigo(), conexao.getOrigem().getLocal(), 10);
+				MyWaypoint pontoConexao = new MyWaypoint(Color.ORANGE, conexao.getConexao().getCodigo(), conexao.getConexao().getLocal(), 10);
+				MyWaypoint pontoDestino = new MyWaypoint(Color.ORANGE, conexao.getDestino().getCodigo(), conexao.getDestino().getLocal(), 10);
+
+				Tracado tr = new Tracado();
+				tr.setWidth(2);
+				tr.setCor(Color.CYAN);
+				tr.addPonto(conexao.getOrigem().getLocal());
+				tr.addPonto(conexao.getConexao().getLocal());
+				tr.addPonto(conexao.getDestino().getLocal());
+
+				lstPoints.add(pontoOrigem);
+				lstPoints.add(pontoConexao);
+				lstPoints.add(pontoDestino);
+				gerenciador.addTracado(tr);
+				gerenciador.setPontos(lstPoints);
+			}
+			gerenciador.alterarCentro(origem.getLocal());
+			gerenciador.getMapKit().repaint();
+		});
+
+	}
+
+	private void mostrarTodosOsAeroportosAlcançáveisAtéUmTempo(GridPane leftPane) {
+		List<MyWaypoint> lstPoints = new ArrayList<>();
+		gerenciador.clear();
+
+		comboAero = new ComboBox(FXCollections.observableList(gerAero.listarTodos()));
+		comboAero.setPromptText("Selecione o aeroporto");
+		comboAero.setMaxSize(200,200);
+		leftPane.add(comboAero, 4, 1);
+		leftPane.add(tempo = new TextField(), 4, 2);
+		Button consultar = new Button("Consultar");
+		leftPane.add(consultar, 4, 3);
+
+		tempo.setPromptText("Tempo em horas");
+		tempo.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue,
+								String newValue) {
+				if (!newValue.matches("\\d*")) {
+					tempo.setText(newValue.replaceAll("[^\\d]", ""));
+				}
+			}
+		});
+
+		consultar.setOnAction(e -> {
+
+			double numeroHoras = Double.parseDouble(tempo.getText());
+
+			ArrayList<Aeroporto> aeroportosComVooDireto = gerAero.listarAeroportosAlcancaveisVooDireto(comboAero.getValue(), numeroHoras, gerRotas);
+
+			for(Aeroporto destino: aeroportosComVooDireto) {
+				Tracado tr = new Tracado();
+				tr.setWidth(3);
+				tr.setCor(Color.GREEN);
+				tr.addPonto(comboAero.getValue().getLocal());
+				tr.addPonto(destino.getLocal());
+				gerenciador.addTracado(tr);
+				lstPoints.add(new MyWaypoint(Color.blue, destino.getCodigo(), destino.getLocal(), 5));
+			}
+
+			for(Conexao c: gerAero.listaAeroportosAlcancaveis(comboAero.getValue(), numeroHoras, gerRotas)) {
+				lstPoints.add(new MyWaypoint(Color.blue, c.getDestino().getCodigo(), c.getDestino().getLocal(), 5));
+				Tracado tr = new Tracado();
+				tr.setWidth(2);
+				tr.setCor(Color.ORANGE);
+				tr.addPonto(c.getConexao().getLocal());
+				tr.addPonto(c.getDestino().getLocal());
+				gerenciador.addTracado(tr);
+			}
+
+			gerenciador.alterarCentro(comboAero.getValue().getLocal());
+			lstPoints.add(new MyWaypoint(Color.RED, comboAero.getValue().getCodigo(), comboAero.getValue().getLocal(), 15));
+			gerenciador.setPontos(lstPoints);
+			gerenciador.getMapKit().repaint();
+		});
+
 	}
 
 	private class EventosMouse extends MouseAdapter {
