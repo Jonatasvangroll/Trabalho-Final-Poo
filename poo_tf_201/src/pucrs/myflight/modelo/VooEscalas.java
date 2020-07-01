@@ -22,7 +22,10 @@ public class VooEscalas extends Voo {
         return rotas.size();
     }
 
-    public ArrayList<Rota> getRotas() {return new ArrayList<>(rotas);}
+    public ArrayList<Rota> getRotas() {
+        return new ArrayList<>(rotas);
+    }
+    
 
     @Override
     public String toString() {
@@ -31,5 +34,3 @@ public class VooEscalas extends Voo {
             aux += "\n   " + r;
         return aux;
     }
-
-}
