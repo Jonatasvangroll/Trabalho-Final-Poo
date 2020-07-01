@@ -17,14 +17,14 @@ public class GerenciadorAeronaves {
 
     public GerenciadorAeronaves() {
         this.avioes = new ArrayList<>();
-        dadosAeronaves("equipment.dat");
+        carregaDados("equipment.dat");
     }
 
     public void adicionar(Aeronave aviao) {
         avioes.add(aviao);
     }
 
-    public void dadosAeronaves(String nomeArq){
+    public void carregaDados(String nomeArq){
 
         Path path2 = Paths.get(nomeArq);
         try (BufferedReader br = Files.newBufferedReader(path2, Charset.defaultCharset()))
@@ -32,7 +32,7 @@ public class GerenciadorAeronaves {
             String header = br.readLine();
             String linha = null;
             while((linha = br.readLine()) != null) {
-                Scanner sc = new Scanner(linha).useDelimiter("-");
+                Scanner sc = new Scanner(linha).useDelimiter(";"); // separador é ;
                 String codigo, descricao;
                 int capacidade;
                 codigo = sc.next();
@@ -44,7 +44,7 @@ public class GerenciadorAeronaves {
             }
         }
         catch (IOException x) {
-            System.err.format("Erro na leitura do arquivo.");
+            System.err.format("Erro na manipulação do arquivo.");
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -67,16 +67,15 @@ public class GerenciadorAeronaves {
     public void ordenarDescricao() {
         avioes.sort(Comparator.comparing(Aeronave::getDescricao).reversed());
     }
-    
-    public void ordenarCodigo() {
-        avioes.sort( (Aeronave a1, Aeronave a2) ->
-            a1.getCodigo().compareTo(a2.getCodigo()));
-    }
 
     public void ordenarCodigoDescricao() {
-       // Ordena pelo código
+       // Ordenando pelo código e desempatando pela descrição
        avioes.sort(Comparator.comparing(Aeronave::getCodigo).
                thenComparing(Aeronave::getDescricao));
     }
 
- }
+    public void ordenarCodigo() {
+        avioes.sort( (Aeronave a1, Aeronave a2) ->
+            a1.getCodigo().compareTo(a2.getCodigo()));
+    }
+}
