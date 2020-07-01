@@ -12,10 +12,6 @@ public class VooEscalas extends Voo {
          LocalDateTime datahora, Duration duracao) {
        super(rota, datahora, duracao);
        rotas = new ArrayList<>();
-//       this.rota = rota;
-//       this.datahora = datahora;
-//       this.duracao = duracao;
-//       this.rotaFinal = rotaFinal;
     }
 
     public void adicionarRota(Rota nova) {
@@ -28,10 +24,6 @@ public class VooEscalas extends Voo {
 
     public ArrayList<Rota> getRotas() {return new ArrayList<>(rotas);}
 
-//    public Rota getRotaFinal() {
-//        return rotaFinal;
-//    }
-
     @Override
     public String toString() {
         String aux = super.toString();
@@ -39,7 +31,5 @@ public class VooEscalas extends Voo {
             aux += "\n   " + r;
         return aux;
     }
-
-
 
 }
