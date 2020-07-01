@@ -1,44 +1,49 @@
 package pucrs.myflight.modelo;
 
-public class Aeronave implements Imprimivel, Comparable<Aeronave> {
+public class Aeroporto implements Comparable<Aeroporto> {
 	private String codigo;
-	private String descricao;
-	private int capacidade;
-	
-	public Aeronave(String codigo, String descricao, int cap) {
+	private String nome;
+	private Geo loc;
+	private String codPais;
+
+	//Construtor mantido devido à erro na classe JanelaFX
+	public Aeroporto(String codigo, String nome, Geo loc) {
 		this.codigo = codigo;
-		this.descricao = descricao;
-		this.capacidade = cap;
+		this.nome = nome;
+		this.loc = loc;
+	}
+
+	//nao verifica se o codPais existe
+	public Aeroporto(String codigo, String nome, Geo loc, String codPais) {
+		this.codigo = codigo;
+		this.nome = nome;
+		this.loc = loc;
+		this.codPais = codPais;
 	}
 	
 	public String getCodigo() {
 		return codigo;
 	}
 	
-	public String getDescricao() {
-		return descricao;
+	public String getNome() {
+		return nome;
+	}
+	
+	public Geo getLocal() {
+		return loc;
 	}
 
-	public int getCapacidade() {
-		return capacidade;
+	public String getCodPais() {
+		return this.codPais;
 	}
 
     @Override
     public String toString() {
-        return codigo + " - " + descricao + " (" + capacidade + ")";
+        return codigo + " - " + nome + " [" + loc + "]";
     }
 
-    // Implementação da interface Imprimivel
-	// Neste caso, basta chamar toString
 	@Override
-	public void imprimir() {
-		System.out.println(toString());
-	}
-
-	// Define o critério de comparação entre duas
-	// aeronaves (usado em Collections.sort(), por exemplo
-	@Override
-	public int compareTo(Aeronave outra) {
-		return descricao.compareTo(outra.descricao);
+	public int compareTo(Aeroporto outro) {
+		return this.nome.compareTo(outro.nome);
 	}
 }
