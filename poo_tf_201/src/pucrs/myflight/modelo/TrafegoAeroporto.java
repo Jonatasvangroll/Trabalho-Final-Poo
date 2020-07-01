@@ -1,16 +1,17 @@
-package pucrs.myflight.modelo;
+package pucrs.myflight.modelo.models;
 
 import pucrs.myflight.modelo.Aeroporto;
 
 public class TrafegoAeroporto {
-    int numeroDeRotas;
     Aeroporto aeroporto;
-   
+    int numeroDeRotas;
 
     public TrafegoAeroporto(Aeroporto aero, int numRotas) {
-        this.numeroDeRotas = numRotas;
         this.aeroporto = aero;
+        this.numeroDeRotas = numRotas;
     }
-    public int getNumeroDeRotas() { return this.numeroDeRotas; }
+
     public Aeroporto getAeroporto() { return this.aeroporto; }
+
+    public int getNumeroDeRotas() { return this.numeroDeRotas; }
 }
