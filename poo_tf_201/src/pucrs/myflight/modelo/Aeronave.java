@@ -29,14 +29,13 @@ public class Aeronave implements Imprimivel, Comparable<Aeronave> {
     }
 
     // Implementação da interface Imprimivel
-	// Neste caso, basta chamar toString
+	
 	@Override
 	public void imprimir() {
 		System.out.println(toString());
 	}
 
-	// Define o critério de comparação entre duas
-	// aeronaves (usado em Collections.sort(), por exemplo
+	// Define o critério de comparação entre duas aeronaves
 	@Override
 	public int compareTo(Aeronave outra) {
 		return descricao.compareTo(outra.descricao);
