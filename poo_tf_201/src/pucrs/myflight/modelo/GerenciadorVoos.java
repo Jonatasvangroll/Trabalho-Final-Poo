@@ -14,25 +14,24 @@ public class GerenciadorVoos {
         this.voos = new ArrayList<>();
     }
 
-    public void ordenarDataHora() {
-        //voos.sort(Comparator.comparing(v -> v.getDatahora()));
-        voos.sort(Comparator.comparing(Voo::getDatahora));
+    public void ordenaDataHora() {
+       voos.sort(Comparator.comparing(Voo::getDatahora));
     }
 
-    public void ordenarDataHoraDuracao() {
+    public void ordenaDataHoraDuracao() {
         voos.sort(Comparator.comparing(Voo::getDatahora).
                 thenComparing(Voo::getDuracao));
     }
 
-    public void adicionar(Voo r) {
+    public void adiciona(Voo r) {
         voos.add(r);
     }
 
-    public ArrayList<Voo> listarTodos() {
+    public ArrayList<Voo> listaTodos() {
         return new ArrayList<>(voos);
     }
 
-    public ArrayList<Voo> buscarData(LocalDate data) {
+    public ArrayList<Voo> buscaData(LocalDate data) {
        ArrayList<Voo> result = new ArrayList<>();
        for(Voo v: voos)
            if(v.getDatahora().toLocalDate().equals(data))
@@ -40,7 +39,6 @@ public class GerenciadorVoos {
        return result;
     }
 
-    // Tarefa 1: listar os dados de vôos cuja origem é informada
     public ArrayList<Voo> buscarOrigem(String cod) {
         ArrayList<Voo> result = new ArrayList<>();
         for(Voo v: voos)
@@ -49,7 +47,6 @@ public class GerenciadorVoos {
         return result;
     }
 
-    // Tarefa 1: listar os dados de vôos que operam em determinado período do dia
     public ArrayList<Voo> buscarPeriodo(LocalTime inicio, LocalTime fim) {
         ArrayList<Voo> result = new ArrayList<>();
         for(Voo v: voos) {
