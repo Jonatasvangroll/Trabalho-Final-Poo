@@ -47,11 +47,9 @@ public class GerenciadorCias {
     public void adicionar(CiaAerea cia1) {
         empresas.put(cia1.getCodigo(),
                 cia1);
-    }
+     }
 
-    public CiaAerea buscarCodigo(String cod) {
-        return empresas.get(cod);
-    }
+    public CiaAerea buscarCodigo(String cod) { return empresas.get(cod);}
 
     public CiaAerea buscarNome(String nome) {
         for(CiaAerea cia: empresas.values())
