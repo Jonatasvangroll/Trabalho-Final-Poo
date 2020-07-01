@@ -1,4 +1,4 @@
-package pucrs.myflight.modelo;
+package pucrs.myflight.modelo.models;
 
 import pucrs.myflight.modelo.Aeroporto;
 
@@ -25,4 +25,3 @@ public class Conexao {
         return destino;
     }
 }
-
