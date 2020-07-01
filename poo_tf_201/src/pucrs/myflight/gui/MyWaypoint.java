@@ -1,10 +1,10 @@
-
 package pucrs.myflight.gui;
 
 import java.awt.Color;
 
 import org.jxmapviewer.viewer.DefaultWaypoint;
 import org.jxmapviewer.viewer.GeoPosition;
+
 
 public class MyWaypoint extends DefaultWaypoint
 {
@@ -13,8 +13,8 @@ public class MyWaypoint extends DefaultWaypoint
 	private final double size;
 
 	/**
-	 * param a cor
-	 * param coord a localização
+	 * @param color a cor
+	 * @param coord a localização
 	 */
 	public MyWaypoint(Color color, String label, GeoPosition coord, double size)
 	{
@@ -25,18 +25,25 @@ public class MyWaypoint extends DefaultWaypoint
 	}
 
 	/**
-	 * returns a cor do waypoint
+	 * @returns a cor do waypoint
 	 */
-	public Color getColor(){return color;}
+	public Color getColor()
+	{
+		return color;
+	}
 	
 	/**
 	 * @returns o texto do waypoint
 	 */
-	public String getLabel() {return label;}
+	public String getLabel() {
+		return label;
+	}
 	
 	/**
 	 * 
 	 * @returns o tamanho do waypoint
 	 */
-	public double getSize() {return size;}
+	public double getSize() {
+		return size;
+	}
 }
