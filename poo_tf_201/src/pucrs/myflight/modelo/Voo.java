@@ -19,37 +19,26 @@ public class Voo {
 		this.datahora = datahora;
 		this.duracao = duracao;
 		this.status = Status.CONFIRMADO; // default é confirmado
-        // Para formatar LocalDateTime de uma forma inteligível
+        // Para formatar LocalDateTime 
         this.formatador = DateTimeFormatter.ofPattern("dd/MMM/yyyy HH:mm");
 	}
 
 	public Voo(Rota rota, Duration duracao) {
-
-	    this(rota,
+          this(rota,
           LocalDateTime.of(2018,4,3,22,00,0),
           duracao);
-//	    this(rota, LocalDateTime.now(), duracao);
     }
 	
-	public Rota getRota() {
-		return rota;
-	}
+	public Rota getRota() {return rota;}
 	
-	public LocalDateTime getDatahora() {
-		return datahora;
-	}
+	public LocalDateTime getDatahora() {return datahora;}
 	
-	public Duration getDuracao() {
-		return duracao;
-	}
+	public Duration getDuracao() {return duracao;}
 	
-	public Status getStatus() {
-		return status;
-	}
+	public Status getStatus() {return status;}
 	
-	public void setStatus(Status novo) {
-		this.status = novo;
-	}
+	public void setStatus(Status novo) {this.status = novo;}
+	
 
     @Override
     public String toString() {
