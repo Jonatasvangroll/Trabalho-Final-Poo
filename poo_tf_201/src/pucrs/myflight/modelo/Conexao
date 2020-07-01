@@ -1,4 +1,4 @@
-ackage pucrs.myflight.modelo.models;
+package pucrs.myflight.modelo.models;
 
 import pucrs.myflight.modelo.Aeroporto;
 
