@@ -29,11 +29,6 @@ import net.sf.geographiclib.*;
 
 import pucrs.myflight.modelo.Geo;
 
-/**
- * Classe para gerenciar um mapa
- *
- * @author Marcelo Cohen
- */
 public class GerenciadorMapa {
 
 	final JXMapKit jXMapKit;
@@ -158,25 +153,14 @@ public class GerenciadorMapa {
 					int ymid = (int)(p0.getY() + p1.getY()) / 2;
 					g.setColor(Color.RED);
 
-					// Desenha label no primeiro trecho da rota
-					// Muito lento e polui demais a tela se houver muitas rotas
-					
-//					int dx = (int) (p0.getX() - p1.getX());
-//					int dy = (int) (p0.getY() - p1.getY());
-//					double theta = Math.atan2(dx, dy);
-//					g.translate(xmid, ymid);
-//				    g.rotate(theta);
-//				    g.drawString(tr.getLabel(), xmid, ymid);
-//				    g.rotate(-theta);
-//				    g.translate(-xmid,-ymid);									
-					
+			
 					for (int i = 0; i < pontos.size(); i++) {
 						Point2D point = map.convertGeoPositionToPoint(pontos.get(i));
 						x[i] = (int) point.getX();
 						y[i] = (int) point.getY();
 					}
-					// int xPoints[] = { 0, 20, 40, 100, 120 };
-					// int yPoints[] = { 0, 20, 40, 100, 120 };
+					
+					
 					g.setColor(cor);
 					g.setStroke(new BasicStroke(tr.getWidth()));
 					g.drawPolyline(x, y, x.length);
@@ -185,8 +169,7 @@ public class GerenciadorMapa {
 
 		};
 
-		// Criando um objeto para desenhar os elementos de interface
-		// (ponto selecionado, etc)
+		
 		Painter<JXMapViewer> guiPainter = new Painter<JXMapViewer>() {
 			public void paint(Graphics2D g, JXMapViewer map, int w, int h) {
 				if (selCentro == null)
