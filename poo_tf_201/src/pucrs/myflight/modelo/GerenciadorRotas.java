@@ -47,7 +47,7 @@ public class GerenciadorRotas {
             }
         }
         catch (IOException x) {
-            System.err.format("Erro na leitura do arquivo.");
+            System.err.format("Erro na manipulação do arquivo.");
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -97,7 +97,7 @@ public class GerenciadorRotas {
         return result;
     }
 
-    public ArrayList<Rota> getRotasComUmaOrigem(Aeroporto origem) {
+    public ArrayList<Rota> getRotasComUmaOrigemEspecifica(Aeroporto origem) {
         return this.rotas
                 .stream()
                 .filter(rota -> rota.getOrigem().getCodigo().equals(origem.getCodigo()))
