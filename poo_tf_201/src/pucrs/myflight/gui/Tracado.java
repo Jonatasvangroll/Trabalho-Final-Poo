@@ -21,43 +21,23 @@ public class Tracado {
 		this.label = "";
 	}
 	
-	public void clear() {
-		pontos.clear();
-	}
+	public void clear() {pontos.clear();}
 	
-	public int size() {
-		return pontos.size();
-	}
+	public int size() {return pontos.size();}
 	
-	public void addPonto(Geo pos) {
-		pontos.add(pos);
-	}
+	public void addPonto(Geo pos) {pontos.add(pos);}
 	
-	public ArrayList<Geo> getPontos() {
-		return pontos;
-	}
+	public ArrayList<Geo> getPontos() {return pontos;}
 	
-	public void setLabel(String label) {
-		this.label = label;
-	}
+	public void setLabel(String label) {this.label = label;}
 	
-	public String getLabel() {
-		return label;
-	}
+	public String getLabel() {return label;}
 	
-	public void setWidth(int width) {
-		this.width = width;
-	}
+	public void setWidth(int width) {this.width = width;}
 	
-	public int getWidth() {
-		return width;
-	}
+	public int getWidth() {return width;}
 	
-	public void setCor(Color cor) {
-		this.cor = cor;
-	}
+	public void setCor(Color cor) {this.cor = cor;}
 	
-	public Color getCor() { 
-		return cor;
-	}
+	public Color getCor() { return cor;}
 }
