@@ -6,61 +6,18 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class GerenciadorRotas {
 
     private ArrayList<Rota> rotas;
-    private static GerenciadorRotas instance;
 
-
-    private GerenciadorRotas() {
+    public GerenciadorRotas() {
         this.rotas = new ArrayList<>();
+        carregaDados("routes.dat");
     }
 
-    public static GerenciadorRotas getInstance() {
-        if (instance == null) {
-            instance = new GerenciadorRotas();
-        }
-        return instance;
-    }
-
-    public void ordenarCias() {
-        Collections.sort(rotas);
-    }
-
-    public void ordenarNomesCias() {
-        rotas.sort((Rota r1, Rota r2) ->
-                r1.getCia().getNome().compareTo(
-                        r2.getCia().getNome()));
-    }
-
-    public void ordenarNomesAeroportos() {
-        rotas.sort((Rota r1, Rota r2) ->
-                r1.getOrigem().getNome().compareTo(
-                        r2.getOrigem().getNome()));
-    }
-
-    public void ordenarNomesAeroportosCias() {
-        rotas.sort((Rota r1, Rota r2) -> {
-            int result = r1.getOrigem().getNome().compareTo(
-                    r2.getOrigem().getNome());
-            if (result != 0)
-                return result;
-            return r1.getCia().getNome().compareTo(
-                    r2.getCia().getNome());
-        });
-    }
-
-    public void adicionar(Rota r) {
-        rotas.add(r);
-    }
-
-    public ArrayList<Rota> listarTodas() {
-        return new ArrayList<>(rotas);
-    }
     public void carregaDados(String nomeArq){
 
         Path path2 = Paths.get(nomeArq);
@@ -69,9 +26,9 @@ public class GerenciadorRotas {
             String header = br.readLine();
             String linha = null;
 
-            GerenciadorCias gerenciadorCias = GerenciadorCias.getInstance();
-            GerenciadorAeroportos gerenciadorAeroportos = GerenciadorAeroportos.getInstance();
-            GerenciadorAeronaves gerenciadorAeronaves = GerenciadorAeronaves.getInstance();
+            GerenciadorCias gerenciadorCias = new GerenciadorCias();
+            GerenciadorAeroportos gerenciadorAeroportos = new GerenciadorAeroportos();
+            GerenciadorAeronaves gerenciadorAeronaves = new GerenciadorAeronaves();
 
             while((linha = br.readLine()) != null) {
                 Scanner sc = new Scanner(linha).useDelimiter(";"); // separador é ;
@@ -97,12 +54,74 @@ public class GerenciadorRotas {
         }
     }
 
+    public void ordenarCias() {
+        Collections.sort(rotas);
+    }
+
+    public void ordenarNomesCias() {
+        rotas.sort( (Rota r1, Rota r2) ->
+          r1.getCia().getNome().compareTo(
+          r2.getCia().getNome()));
+    }
+
+    public void ordenarNomesAeroportos() {
+        rotas.sort( (Rota r1, Rota r2) ->
+                r1.getOrigem().getNome().compareTo(
+                r2.getOrigem().getNome()));
+    }
+
+    public void ordenarNomesAeroportosCias() {
+        rotas.sort( (Rota r1, Rota r2) -> {
+           int result = r1.getOrigem().getNome().compareTo(
+                   r2.getOrigem().getNome());
+           if(result != 0)
+               return result;
+           return r1.getCia().getNome().compareTo(
+                   r2.getCia().getNome());
+        });
+    }
+
+    public void adicionar(Rota r) {
+        rotas.add(r);
+    }
+
+    public ArrayList<Rota> listarTodas() {
+        return new ArrayList<>(rotas);
+    }
+
     public ArrayList<Rota> buscarOrigem(String codigo) {
         ArrayList<Rota> result = new ArrayList<>();
-        for (Rota r : rotas)
-            if (r.getOrigem().getCodigo().equals(codigo))
+        for(Rota r: rotas)
+            if(r.getOrigem().getCodigo().equals(codigo))
                 result.add(r);
         return result;
     }
-}
 
+    public ArrayList<Rota> getRotasComUmaOrigemEspecifica(Aeroporto origem) {
+        return this.rotas
+                .stream()
+                .filter(rota -> rota.getOrigem().getCodigo().equals(origem.getCodigo()))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public ArrayList<Rota> listarRotasComUmDestino(Aeroporto destino) {
+        return this.rotas
+                .stream()
+                .filter(rota -> rota.getDestino().getCodigo().equals(destino.getCodigo()))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public ArrayList<Rota> listarRotasPorCodCompanhia(String codCompanhia) {
+        return this.rotas.stream()
+                         .filter(x -> x.getCia().getCodigo().equals(codCompanhia))
+                         .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public ArrayList<Rota> listarRotasPorCodigoAeroporto(String codigoAeroporto) {
+        return this.rotas
+                   .stream()
+                   .filter(rota -> rota.getDestino().getCodigo().equals(codigoAeroporto) ||
+                           rota.getOrigem().getCodigo().equals(codigoAeroporto))
+                   .collect(Collectors.toCollection(ArrayList::new));
+    }
+}
