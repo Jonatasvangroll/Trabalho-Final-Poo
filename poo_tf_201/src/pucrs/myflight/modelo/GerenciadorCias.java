@@ -1,27 +1,19 @@
 package pucrs.myflight.modelo;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class GerenciadorCias {
+    private Map<String, CiaAerea> empresas;
 
-    private Map<String,CiaAerea> empresas;
-    Map<String,Set<String>> arquivo;
-
-    private static GerenciadorCias instance;
-
-    public static GerenciadorCias getInstance() {
-        if ( instance == null )
-            instance = new GerenciadorCias();
-
-        return instance;
-    }
-
-    private GerenciadorCias() {
-        this.empresas = new HashMap<>();
+    public GerenciadorCias(){
+        this.empresas = new LinkedHashMap<>();
+        carregaDados("airlines.dat");
     }
 
     public ArrayList<CiaAerea> listarTodas() {
@@ -29,18 +21,26 @@ public class GerenciadorCias {
     }
 
     public void carregaDados(String nomeArq){
-        File file = new File(nomeArq);
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+        Path path2 = Paths.get(nomeArq);
+        try (BufferedReader br = Files.newBufferedReader(path2, Charset.defaultCharset()))
+        {
+            String header = br.readLine();
+            String linha = null;
+            while((linha = br.readLine()) != null) {
+                Scanner sc = new Scanner(linha).useDelimiter("-");
+                String codigo, nome;
+                codigo = sc.next();
+                nome = sc.next();
 
-            String arquivo;
-            while ((arquivo = br.readLine()) != null) {
-              //  System.out.println(arquivo);
-                String[] dados = arquivo.split(";");
-                CiaAerea nova = new CiaAerea(dados[0], dados[1]);
-                adicionar(nova);
+                CiaAerea cia = new CiaAerea(codigo, nome);
+                this.empresas.put(cia.getCodigo(), cia);
             }
-        } catch (IOException e) {
-            System.err.format("Erro de E/S: %s%n ", e);
+        }
+        catch (IOException x) {
+            System.err.format("Erro na leitura do arquivo.");
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -51,14 +51,13 @@ public class GerenciadorCias {
 
     public CiaAerea buscarCodigo(String cod) {
         return empresas.get(cod);
+
     }
 
     public CiaAerea buscarNome(String nome) {
         for(CiaAerea cia: empresas.values())
-            if(cia.getNome().equals(nome))
-                return cia;
+           if(cia.getNome().equals(nome))
+               return cia;
         return null;
     }
-
 }
-
