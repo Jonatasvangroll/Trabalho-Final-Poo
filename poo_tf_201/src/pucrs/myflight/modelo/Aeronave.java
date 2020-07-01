@@ -11,29 +11,20 @@ public class Aeronave implements Imprimivel, Comparable<Aeronave> {
 		this.capacidade = cap;
 	}
 	
-	public String getCodigo() {
-		return codigo;
-	}
+	public String getCodigo() {return codigo;}
 	
-	public String getDescricao() {
-		return descricao;
-	}
+	public String getDescricao() {return descricao;}
 
-	public int getCapacidade() {
-		return capacidade;
-	}
+	public int getCapacidade() {return capacidade;}
 
     @Override
-    public String toString() {
-        return codigo + " - " + descricao + " (" + capacidade + ")";
-    }
+    public String toString() {return codigo + " - " + descricao + " (" + capacidade + ")";}
 
     // Implementação da interface Imprimivel
 	
 	@Override
 	public void imprimir() {
-		System.out.println(toString());
-	}
+		System.out.println(toString());}
 
 	// Define o critério de comparação entre duas aeronaves
 	@Override
