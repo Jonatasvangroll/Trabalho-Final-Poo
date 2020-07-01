@@ -34,7 +34,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import pucrs.myflight.modelo.*;
-import pucrs.myflight.modelo.models.Conexao;
+import pucrs.myflight.modelo.Conexao;
 import pucrs.myflight.modelo.models.TrafegoAeroporto;
 
 public class JanelaFX extends Application {
