@@ -1,6 +1,8 @@
 package pucrs.myflight.modelo;
 
 import javafx.beans.Observable;
+import pucrs.myflight.modelo.Conexao;
+import pucrs.myflight.modelo.TrafegoAeroporto;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +23,7 @@ public class GerenciadorAeroportos {
 
     public GerenciadorAeroportos() {
         this.aeroportos = new ArrayList<>();
-        dadosAeroportos("airports.dat");
+        carregaDados("airports.dat");
     }
 
     public void ordenarNomes() {
@@ -32,7 +34,7 @@ public class GerenciadorAeroportos {
         aeroportos.add(aero);
     }
 
-    public void dadosAeroportos(String nomeArq){
+    public void carregaDados(String nomeArq){
 
         Path path2 = Paths.get(nomeArq);
         try (BufferedReader br = Files.newBufferedReader(path2, Charset.defaultCharset()))
@@ -40,7 +42,7 @@ public class GerenciadorAeroportos {
             String header = br.readLine();
             String linha = null;
             while((linha = br.readLine()) != null) {
-                Scanner sc = new Scanner(linha).useDelimiter("-");
+                Scanner sc = new Scanner(linha).useDelimiter(";"); // separador é ;
                 String codigo, nome, codPais;
                 double latitude, longitude;
                 codigo = sc.next();
@@ -55,7 +57,7 @@ public class GerenciadorAeroportos {
             }
         }
         catch (IOException x) {
-            System.err.format("Erro na leitura do arquivo.");
+            System.err.format("Erro na manipulação do arquivo.");
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -73,15 +75,15 @@ public class GerenciadorAeroportos {
         return null;
     }
 
-    public ArrayList<Conexao> listaAeroportosAlcancaveis (Aeroporto origem, double numeroHoras, GerenciadorRotas gr){
+    public ArrayList<Conexao> listarAeroportosAlcancaveisAteUmTempo (Aeroporto origem, double numeroHoras, GerenciadorRotas gr){
 
         ArrayList<Conexao> conexoes = new ArrayList<>();
         double distanciaPossivelPercorrer = origem.getLocal().VELOCIDADEPADRAO * numeroHoras;
-        ArrayList<Aeroporto> aeroportosVooDireto = listarAeroportosAlcancaveisVooDireto(origem, numeroHoras, gr);
+        ArrayList<Aeroporto> aeroportosVooDireto = listarAeroportosAlcancaveisAteUmTempoVooDireto(origem, numeroHoras, gr);
 
         for(Aeroporto aeroPrimeiroVoo: aeroportosVooDireto) {
             double distanciaPrimeiroTrecho = origem.getLocal().distancia(aeroPrimeiroVoo.getLocal());
-            ArrayList<Aeroporto> aeroportosDestinoFinal = listaAeroportosDestinoPossiveis(aeroPrimeiroVoo, gr);
+            ArrayList<Aeroporto> aeroportosDestinoFinal = listarAeroportosDestinoPossiveis(aeroPrimeiroVoo, gr);
 
             for(Aeroporto aeroDestino : aeroportosDestinoFinal) {
                 if(!aeroDestino.getCodigo().equals(origem.getCodigo())) {
@@ -98,8 +100,8 @@ public class GerenciadorAeroportos {
         return conexoes;
     }
 
-    public ArrayList<Aeroporto> listarAeroportosAlcancaveisVooDireto(Aeroporto origem, double numeroHoras, GerenciadorRotas gr) {
-        ArrayList<Rota> rotasDeUmaOrigem = new ArrayList<>(gr.getRotasComUmaOrigem(origem));
+    public ArrayList<Aeroporto> listarAeroportosAlcancaveisAteUmTempoVooDireto(Aeroporto origem, double numeroHoras, GerenciadorRotas gr) {
+        ArrayList<Rota> rotasDeUmaOrigem = new ArrayList<>(gr.getRotasComUmaOrigemEspecifica(origem));
         Set<Aeroporto> listaAeroportos = new HashSet<>();
         for(Rota rota: rotasDeUmaOrigem){
             Aeroporto aero = rota.getDestino();
@@ -111,7 +113,7 @@ public class GerenciadorAeroportos {
         return new ArrayList<>(listaAeroportos);
     }
 
-    public ArrayList<Aeroporto> listaAeroportosPorCodCia(String codCompanhia, GerenciadorRotas gr) {
+    public ArrayList<Aeroporto> listarAeroportosPorCodCompanhia(String codCompanhia, GerenciadorRotas gr) {
         ArrayList<Rota> rotas = gr.listarRotasPorCodCompanhia(codCompanhia);
         Set<Aeroporto> listaAeroportos = new HashSet<>();
         ArrayList<Aeroporto> origens = rotas.stream().map(x -> x.getOrigem()).collect(Collectors.toCollection(ArrayList::new));
@@ -127,16 +129,16 @@ public class GerenciadorAeroportos {
         return new ArrayList<Aeroporto>(listaAeroportos);
     }
 
-    public ArrayList<Aeroporto> listaAeroportosUmPais(String codPais) {
+    public ArrayList<Aeroporto> listarAeroportosDeUmPais(String codPais) {
         return this.aeroportos
                 .stream()
                 .filter(aero -> aero.getCodPais().equals(codPais))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public ArrayList<Aeroporto> listaAeroportosDestinoPossiveis(Aeroporto origem, GerenciadorRotas gr) {
+    public ArrayList<Aeroporto> listarAeroportosDestinoPossiveis(Aeroporto origem, GerenciadorRotas gr) {
         Set<Aeroporto> aeros = new HashSet<>();
-        aeros = gr.getRotasComUmaOrigem(origem)
+        aeros = gr.getRotasComUmaOrigemEspecifica(origem)
                 .stream()
                 .map(x -> x.getDestino())
                 .collect(Collectors.toSet());
@@ -159,7 +161,7 @@ public class GerenciadorAeroportos {
             }
 
         } else {
-            for (Aeroporto aeroPais : listaAeroportosUmPais(codigoPais)) {
+            for (Aeroporto aeroPais : listarAeroportosDeUmPais(codigoPais)) {
                 int numeroDeRotas = gr.listarRotasPorCodigoAeroporto(aeroPais.getCodigo()).size();
                 TrafegoAeroporto ta = new TrafegoAeroporto(aeroPais, numeroDeRotas);
                 trafegoAeroportos.add(ta);
@@ -168,10 +170,10 @@ public class GerenciadorAeroportos {
         return trafegoAeroportos;
     }
 
-    public ArrayList<Conexao> listaTrajetosComUmaConexao(Aeroporto origem, Aeroporto destino, GerenciadorRotas gr) {
+    public ArrayList<Conexao> listarTrajetosComUmaConexao(Aeroporto origem, Aeroporto destino, GerenciadorRotas gr) {
 
         ArrayList<Rota> rotasDestino = gr.listarRotasComUmDestino(destino);
-        ArrayList<Rota> rotasOrigem = gr.getRotasComUmaOrigem(origem);
+        ArrayList<Rota> rotasOrigem = gr.getRotasComUmaOrigemEspecifica(origem);
         Set<Conexao> conexao = new HashSet<>();
 
         for (Rota rotaOrigem: rotasOrigem) {
