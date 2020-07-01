@@ -1,10 +1,10 @@
 package pucrs.myflight.modelo;
 
-public class Pais implements Imprimivel{
+public class Paises implements Imprimivel{
     private String codigo;
     private String nome;
 
-    public Pais(String codigo, String nome) {
+    public Paises(String codigo, String nome) {
         this.codigo = codigo;
         this.nome = nome;
     }
