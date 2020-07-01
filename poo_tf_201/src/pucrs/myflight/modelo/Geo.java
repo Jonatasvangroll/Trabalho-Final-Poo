@@ -11,14 +11,14 @@ public class Geo extends GeoPosition {
 	}
 	public final double VELOCIDADEPADRAO = 805;
 	// Metodo para calcular a distancia entre
-	// calcula a distancia entre geolocalizações
+	// ESTA localizacao e o outra informada
 	public double distancia(Geo outra) {
 		Geo obj = new Geo(getLatitude(), getLongitude());
 		return distancia(obj, outra);
-		
+		//return distancia(this, outra);
 	}
 
-	public double tempoViagem(Geo locConexao, Geo locDestino) {
+	public double duracaoViagem(Geo locConexao, Geo locDestino) {
 		double distRota1 = this.distancia(locConexao);
 		double distRota2 = locConexao.distancia(locDestino);
 		double dist = distRota1 + distRota2;
@@ -30,8 +30,7 @@ public class Geo extends GeoPosition {
 		return (dist/VELOCIDADEPADRAO);
 	}
 	
-	// Metodo de classe (static) para calcular
-	// distancias entre dois objetos Geo informados
+	// Metodo de classe para calcular distancias entre dois objetos Geo informados
 	public static double distancia(Geo geo1, Geo geo2) {
 		double lat1 = Math.toRadians(geo1.getLatitude());
 		double lat2 = Math.toRadians(geo2.getLatitude());
