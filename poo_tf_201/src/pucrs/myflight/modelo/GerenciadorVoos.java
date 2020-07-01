@@ -14,24 +14,25 @@ public class GerenciadorVoos {
         this.voos = new ArrayList<>();
     }
 
-    public void ordenaDataHora() {
-       voos.sort(Comparator.comparing(Voo::getDatahora));
+    public void ordenarDataHora() {
+        
+        voos.sort(Comparator.comparing(Voo::getDatahora));
     }
 
-    public void ordenaDataHoraDuracao() {
+    public void ordenarDataHoraDuracao() {
         voos.sort(Comparator.comparing(Voo::getDatahora).
                 thenComparing(Voo::getDuracao));
     }
 
-    public void adiciona(Voo r) {
+    public void adicionar(Voo r) {
         voos.add(r);
     }
 
-    public ArrayList<Voo> listaTodos() {
+    public ArrayList<Voo> listarTodos() {
         return new ArrayList<>(voos);
     }
 
-    public ArrayList<Voo> buscaData(LocalDate data) {
+    public ArrayList<Voo> buscarData(LocalDate data) {
        ArrayList<Voo> result = new ArrayList<>();
        for(Voo v: voos)
            if(v.getDatahora().toLocalDate().equals(data))
@@ -39,6 +40,7 @@ public class GerenciadorVoos {
        return result;
     }
 
+    // Listar os dados de vôos
     public ArrayList<Voo> buscarOrigem(String cod) {
         ArrayList<Voo> result = new ArrayList<>();
         for(Voo v: voos)
@@ -47,6 +49,7 @@ public class GerenciadorVoos {
         return result;
     }
 
+    // Listar os dados de vôos que operam em determinado período do dia
     public ArrayList<Voo> buscarPeriodo(LocalTime inicio, LocalTime fim) {
         ArrayList<Voo> result = new ArrayList<>();
         for(Voo v: voos) {
