@@ -6,10 +6,6 @@ import java.awt.Color;
 import org.jxmapviewer.viewer.DefaultWaypoint;
 import org.jxmapviewer.viewer.GeoPosition;
 
-/**
- * Um waypoint que tem uma cor e um texto associados
- * @author Martin Steiger, Marcelo Cohen
- */
 public class MyWaypoint extends DefaultWaypoint
 {
 	private final Color color;
@@ -17,8 +13,8 @@ public class MyWaypoint extends DefaultWaypoint
 	private final double size;
 
 	/**
-	 * @param color a cor
-	 * @param coord a localização
+	 * param a cor
+	 * param coord a localização
 	 */
 	public MyWaypoint(Color color, String label, GeoPosition coord, double size)
 	{
@@ -29,25 +25,18 @@ public class MyWaypoint extends DefaultWaypoint
 	}
 
 	/**
-	 * @returns a cor do waypoint
+	 * returns a cor do waypoint
 	 */
-	public Color getColor()
-	{
-		return color;
-	}
+	public Color getColor(){return color;}
 	
 	/**
 	 * @returns o texto do waypoint
 	 */
-	public String getLabel() {
-		return label;
-	}
+	public String getLabel() {return label;}
 	
 	/**
 	 * 
 	 * @returns o tamanho do waypoint
 	 */
-	public double getSize() {
-		return size;
-	}
+	public double getSize() {return size;}
 }
