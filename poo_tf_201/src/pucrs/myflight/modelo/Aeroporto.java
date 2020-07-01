@@ -4,19 +4,13 @@ public class Aeroporto implements Comparable<Aeroporto> {
 	private String codigo;
 	private String nome;
 	private Geo loc;
-	private String codigoPais;
+	private String codPais;
 
-	public Aeroporto(String codigo, String nome, Geo loc) {
+	public Aeroporto(String codigo, String nome, Geo loc, String codPais) {
 		this.codigo = codigo;
 		this.nome = nome;
 		this.loc = loc;
-	}
-//sobrecarga incluindo o código do país
-	public Aeroporto(String codigo, String nome, Geo loc, String codigoPais) {
-		this.codigo = codigo;
-		this.nome = nome;
-		this.loc = loc;
-		this.codigoPais = codigoPais;
+		this.codPais = codPais;
 	}
 	
 	public String getCodigo() {
@@ -32,7 +26,7 @@ public class Aeroporto implements Comparable<Aeroporto> {
 	}
 
 	public String getCodPais() {
-		return this.codigoPais;
+		return this.codPais;
 	}
 
     @Override
